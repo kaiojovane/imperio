@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Império Produções - Agência especializada em shows, eventos e gerenciamento artístico.">
+    <title>Império Produções | Agência Shows e Eventos</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#d4af37',
+                        'gold-dark': '#b4941f',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'zoom-slow': 'zoomEffect 20s infinite alternate',
+                        'shimmer': 'shimmer 3s infinite linear',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        zoomEffect: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.15)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Scrollbar Personalizada */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #333;
+            border-radius: 4px;
+        }
+        
+        body {
+            background-color: #050505;
+            color: #d4af37;
+            overflow-x: hidden; /* Essencial para animações não quebrarem o layout */
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4af37;
+            border-radius: 4px;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(90deg, #000 0%, #1a1a1a 50%, #000 100%);
+        }
+
+        .gold-text-glow {
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Efeito de Brilho Metálico nos Botões */
+        .btn-shine {
+            background: linear-gradient(120deg, transparent 30%, rgba(255,255,255, 0.4) 50%, transparent 70%);
+            background-size: 200% 100%;
+            transition: all 0.5s;
+        }
+        .btn-shine:hover {
+            background-position: 100% 0;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Estilos do Carrossel 3D */
+        .slider-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .artist-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: absolute;
+            width: 300px; 
+            height: 400px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        @media (min-width: 768px) {
+            .artist-card {
+                width: 400px;
+                height: 550px;
+            }
+        }
+
+        .card-active {
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 20;
+            opacity: 1;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+            filter: grayscale(0%);
+        }
+        
+        .card-next {
+            transform: translate(10%, -50%) scale(0.8);
+            z-index: 10;
+            opacity: 0.6;
+            filter: grayscale(80%) blur(1px);
+        }
+
+        .card-prev {
+            transform: translate(-110%, -50%) scale(0.8);
+            z-index: 10;
+            opacity: 0.6;
+            filter: grayscale(80%) blur(1px);
+        }
+
+        .card-hidden {
+            transform: translate(-50%, -50%) scale(0.5);
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="gold-gradient fixed w-full z-50 shadow-lg border-b border-gold/20" data-aos="fade-down" data-aos-duration="1000">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fas fa-crown text-3xl text-gold animate-pulse"></i>
+                <h1 class="text-xl md:text-2xl font-bold tracking-widest text-white">IMPÉRIO <span class="text-gold">PRODUÇÕES</span></h1>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#inicio" class="nav-link text-white hover:text-gold transition font-medium">Início</a>
+                <a href="#artistas" class="nav-link text-white hover:text-gold transition font-medium">Artistas</a>
+                <a href="#sobre" class="nav-link text-white hover:text-gold transition font-medium">Sobre</a>
+                <a href="#contato" class="nav-link text-white hover:text-gold transition font-medium">Contato</a>
+            </nav>
+
+            <button id="mobileMenuBtn" class="md:hidden text-2xl text-gold focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-black border-t border-gray-800 absolute w-full">
+            <div class="flex flex-col p-4 space-y-4 text-center">
+                <a href="#inicio" class="mobile-link text-white hover:text-gold">Início</a>
+                <a href="#artistas" class="mobile-link text-white hover:text-gold">Artistas</a>
+                <a href="#sobre" class="mobile-link text-white hover:text-gold">Sobre</a>
+                <a href="#contato" class="mobile-link text-white hover:text-gold">Contato</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="w-full h-full bg-[url('fundo01.jpg')] bg-cover bg-center animate-zoom-slow"></div>
+        </div>
+        
+        <div class="absolute inset-0 bg-black/80"></div>
+        
+        <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent z-10"></div>
+        
+        <div class="container mx-auto px-4 relative z-20 text-center">
+            <div class="mb-8 inline-block animate-float" data-aos="zoom-in" data-aos-duration="1500">
+                <img src="leão4.png" alt="Logo Leão Império" class="w-48 md:w-72 mx-auto rounded-full border-2 border-gold shadow-[0_0_50px_rgba(212,175,55,0.4)]">
+            </div>
+            
+            <h2 class="text-3xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-xl" data-aos="fade-up" data-aos-delay="200">
+                Excelência em <span class="text-gold gold-text-glow">Grandes Eventos</span>
+            </h2>
+            
+            <p class="text-gray-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-light" data-aos="fade-up" data-aos-delay="400">
+                Elevando seu evento ao patamar da excelência com representação de classe mundial e infraestrutura impecável.
+            </p>
+            
+            <a href="#artistas" class="btn-shine inline-flex items-center gap-2 bg-gold text-black px-10 py-4 rounded-full font-bold hover:bg-white transition duration-300 shadow-[0_0_20px_rgba(212,175,55,0.4)] transform hover:-translate-y-1" data-aos="fade-up" data-aos-delay="600">
+                <span>VER ARTISTAS</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center z-30">
+            <a href="#artistas" class="animate-bounce text-gold text-2xl">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <section id="artistas" class="py-24 bg-black relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="text-3xl md:text-4xl font-bold tracking-widest text-white">ARTISTAS EXCLUSIVOS</h2>
+                <div class="w-24 h-1 bg-gold mx-auto mt-4"></div>
+            </div>
+
+            <div class="relative h-[500px] md:h-[650px] w-full slider-container" id="sliderContainer" data-aos="zoom-in-up" data-aos-duration="1200">
+                </div>
+
+            <div class="flex justify-center gap-8 mt-8" data-aos="fade-up" data-aos-delay="200">
+                <button id="prevBtn" class="bg-gray-900/80 hover:bg-gold hover:text-black text-gold p-4 rounded-full transition border border-gold/30 hover:scale-110">
+                    <i class="fas fa-chevron-left text-xl"></i>
+                </button>
+                <button id="nextBtn" class="bg-gray-900/80 hover:bg-gold hover:text-black text-gold p-4 rounded-full transition border border-gold/30 hover:scale-110">
+                    <i class="fas fa-chevron-right text-xl"></i>
+                </button>
+            </div>
+
+            <div id="artistInfoDisplay" class="text-center mt-10 max-w-3xl mx-auto px-4 transition-opacity duration-300" data-aos="fade-up">
+                </div>
+
+            <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-gray-900 z-10 pointer-events-none"></div>
+        </div>
+    </section>
+
+    <section id="sobre" class="py-20 bg-gradient-to-b from-gray-900 to-black overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/2" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="relative group">
+                        <div class="absolute -inset-2 bg-gold blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                        <img src="leão.png" alt="Sobre Império Produções" class="relative rounded-lg shadow-2xl w-full object-cover transform transition duration-500 group-hover:scale-[1.02]">
+                    </div>
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left" data-aos-duration="1000">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white">A IMPÉRIO</h2>
+                    <div class="w-20 h-1 bg-gold mb-8"></div>
+                    
+                    <p class="text-gray-300 mb-6 leading-relaxed text-lg">
+                        A Império Produções é referência em criar experiências inesquecíveis. Com expertise técnica e uma rede global, transformamos conceitos criativos em grandes espetáculos pelo Brasil.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                        <div class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-gold/50 transition duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="0">
+                            <i class="fas fa-music text-gold text-xl"></i>
+                            <span class="font-medium text-white">Produção Musical</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-gold/50 transition duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="100">
+                            <i class="fas fa-globe text-gold text-xl"></i>
+                            <span class="font-medium text-white">Gestão de Carreira</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-gold/50 transition duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="200">
+                            <i class="fas fa-star text-gold text-xl"></i>
+                            <span class="font-medium text-white">Booking Artístico</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-gold/50 transition duration-300 hover:-translate-y-1" data-aos="fade-up" data-aos-delay="300">
+                            <i class="fas fa-calendar-check text-gold text-xl"></i>
+                            <span class="font-medium text-white">Logística de Turnês</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-20 bg-black relative">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16" data-aos="fade-down">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">FALE CONOSCO</h2>
+                <div class="w-24 h-1 bg-gold mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <div class="space-y-8" data-aos="fade-right">
+                    
+                    <div class="flex items-start gap-4 group">
+                        <div class="bg-gray-900 p-4 rounded-full text-gold shrink-0 border border-gray-800 group-hover:border-gold/50 transition duration-300 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                            <i class="fas fa-phone-alt text-xl group-hover:rotate-12 transition"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg">Atendimento</h4>
+                            <p class="text-gray-400 mt-1 hover:text-gold transition"><a href="tel:+5538998244526">+55 (38) 99824-4526</a></p>
+                            <p class="text-gray-400 hover:text-gold transition"><a href="tel:+5538991827220">+55 (38) 99182-7220</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start gap-4 group">
+                        <div class="bg-gray-900 p-4 rounded-full text-gold shrink-0 border border-gray-800 group-hover:border-gold/50 transition duration-300 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                            <i class="fas fa-envelope text-xl group-hover:rotate-12 transition"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg">Email Comercial</h4>
+                            <p class="text-gray-400 mt-1">contato@imperioproducoes.com</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 group">
+                        <div class="bg-gray-900 p-4 rounded-full text-gold shrink-0 border border-gray-800 group-hover:border-gold/50 transition duration-300 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                            <i class="fas fa-map-location-dot text-xl group-hover:rotate-12 transition"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg">Escritório</h4>
+                            <p class="text-gray-400 mt-1 leading-relaxed">
+                                Av. Antônio Carlos, 120 - Centro<br>
+                                Salinas - MG, 39560-000
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4 group">
+                        <div class="bg-gray-900 p-4 rounded-full text-gold shrink-0 border border-gray-800 group-hover:border-gold/50 transition duration-300 group-hover:shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                            <i class="fas fa-clock text-xl group-hover:rotate-12 transition"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-lg">Funcionamento</h4>
+                            <div class="text-gray-400 mt-1 space-y-1">
+                                <p class="flex justify-between w-48"><span>Seg - Dom:</span> <span class="text-white">07:00 - 18:00</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 mt-4 border-t border-gray-800">
+                        <h4 class="font-bold text-gold mb-4 uppercase tracking-widest text-xs">Nossas Redes</h4>
+                        <div class="flex gap-4">
+                            <a href="#" class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-gray-400 hover:text-gold hover:bg-gray-900 hover:scale-110 transition duration-300 border border-gray-800 group">
+                                <i class="fab fa-instagram text-xl group-hover:animate-pulse"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-gray-400 hover:text-gold hover:bg-gray-900 hover:scale-110 transition duration-300 border border-gray-800 group">
+                                <i class="fab fa-facebook-f text-xl group-hover:animate-pulse"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-gray-400 hover:text-gold hover:bg-gray-900 hover:scale-110 transition duration-300 border border-gray-800 group">
+                                <i class="fab fa-youtube text-xl group-hover:animate-pulse"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="bg-gray-900/50 p-8 rounded-2xl border border-gray-800 shadow-xl" onsubmit="event.preventDefault(); alert('Mensagem enviada (demo)!');" data-aos="fade-left" data-aos-delay="200">
+                    <div class="space-y-4">
+                        <div class="group">
+                            <input type="text" placeholder="Seu Nome" class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition duration-300 group-hover:border-gray-600">
+                        </div>
+                        <div class="group">
+                            <input type="email" placeholder="Seu Email" class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition duration-300 group-hover:border-gray-600">
+                        </div>
+                        <div class="group">
+                            <textarea placeholder="Sua Mensagem" rows="4" class="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition duration-300 group-hover:border-gray-600"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-gold text-black font-bold py-3 rounded-lg hover:bg-white transition duration-300 shadow-lg transform hover:-translate-y-1 btn-shine">
+                            ENVIAR MENSAGEM
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black border-t border-gray-900 py-8 text-center text-gray-500 text-sm">
+        <p>© 2025 Império Produções. Todos os direitos reservados.</p>
+    </footer>
+
+    <div id="artistModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" id="closeModalOverlay"></div>
+        
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl max-h-[90vh] p-4">
+            <div class="bg-gray-900 rounded-2xl border border-gold/30 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative overflow-hidden flex flex-col animate-zoom-in">
+                <button id="closeModalBtn" class="absolute top-4 right-4 text-white hover:text-gold z-50 text-2xl bg-black/50 w-10 h-10 rounded-full flex items-center justify-center transition hover:scale-110 hover:rotate-90">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="modalContent" class="flex flex-col md:flex-row h-full overflow-hidden">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        // Inicializa as animações de Scroll
+        AOS.init({
+            once: true, // A animação acontece apenas uma vez (não repete ao subir)
+            offset: 100, // Começa a animar 100px antes do elemento aparecer
+            easing: 'ease-out-cubic', // Curva de velocidade suave
+        });
+
+        // Dados dos Artistas
+        const artists = [
+            {
+                id: 1,
+                name: "LUANZITTO",
+                genre: "Arrochadeira",
+                image: "luanzitto222.png", 
+                description: "Destaque do Norte de Minas, Luanzitto mistura Arrocha e cultura popular. Com o hit 'Me Pega de Novo' e um novo álbum Brega em 2025, ele traz energia única para os palcos.",
+                instagram: "https://www.instagram.com/luanzittooficial",
+                spotify: "https://open.spotify.com/intl-pt/artist/5vIUHv84DfNIChaRPfhZGO?si=lvhMF38JTSqq2l57ZuRGog",
+                youtube: "https://www.youtube.com/watch?v=-fPMMgY_JvY&start_radio=1"
+            },
+            {
+                id: 2,
+                name: "Miguel & Daniel",
+                genre: "Sertanejo",
+                image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&q=80&w=800",
+                description: "Miguel & Daniel Antigos compositores para Zé Neto & Cristiano, a dupla lançou o DVD 'Jeitão de Interior' em 2024 e já se consolida como promessa com mais de 650 mil streams nas plataformas",
+                instagram: "https://www.instagram.com/migueledaniel",
+                spotify: "https://open.spotify.com/intl-pt/artist/5it1L2qpn43Hdyb3N0EBiD?si=umWdjGquTZCndTaDB0_Rlg",
+                youtube: "https://www.youtube.com/@migueledanieloficial"
+            },
+            {
+                id: 3,
+                name: "Luiz Gustavo",
+                genre: "Sertanejo",
+                image: "https://images.unsplash.com/photo-1571266028243-e4733b090bb1?auto=format&fit=crop&q=80&w=800",
+                description: "Luiz Gustavo de Brasília, une modão e arrocha em grandes eventos como a Expoabra. Com passagens pela TV, lidera o projeto 'Moda Que Não Sai de Moda' e destaca-se pelo repertório autêntico.",
+                instagram: "https://www.instagram.com/luiizgustavoofc",
+                spotify: "https://open.spotify.com/intl-pt/artist/0QcMU0Kbt2wYTVpRUiCB0S?si=TiNoDb1iS8CxcPjodz4uTA",
+                youtube: "https://www.youtube.com/playlist?list=OLAK5uy_kI7IbFkvkqV--JLcFxgAMhD3rTutWAW0I"
+            },
+            {
+                id: 4,
+                name: "Bella Alencar",
+                genre: "Sertanejo",
+                image: "https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=800",
+                description: "Bella Alencar Ex-The Voice Kids, a cantora e influenciadora soma vitórias em festivais, um feat com Amado Batista e trilha sonora na novela As Aventuras de Poliana, alcançando milhões de visualizações nas redes.",
+                instagram: "https://www.instagram.com/bellaalencarcantora",
+                spotify: "https://open.spotify.com/intl-pt/artist/0ZXLnj50mFGUtDo6hgpKpu?si=KYfPeN1lTgy2sL9nIrRcJg",
+                youtube: "https://www.youtube.com/watch?v=SbP8DyL_hOQ"
+            }
+        ];
+
+        let currentIndex = 0;
+        let autoPlayInterval;
+
+        const sliderContainer = document.getElementById('sliderContainer');
+        const artistInfoDisplay = document.getElementById('artistInfoDisplay');
+        const artistModal = document.getElementById('artistModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function init() {
+            renderCards();
+            updateCarousel();
+            startAutoPlay();
+            setupMobileMenu();
+        }
+
+        function renderCards() {
+            sliderContainer.innerHTML = '';
+            artists.forEach((artist, index) => {
+                const card = document.createElement('div');
+                card.className = 'artist-card rounded-xl overflow-hidden cursor-pointer';
+                card.onclick = () => {
+                    if (index === currentIndex) openModal(artist);
+                    else {
+                        currentIndex = index;
+                        updateCarousel();
+                        resetAutoPlay();
+                    }
+                };
+                
+                card.innerHTML = `
+                    <div class="relative w-full h-full group">
+                        <img src="${artist.image}" alt="${artist.name}" class="w-full h-full object-cover transition duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+                        <div class="absolute bottom-0 left-0 p-6 w-full">
+                            <h3 class="text-2xl font-bold text-white uppercase drop-shadow-md">${artist.name}</h3>
+                            <p class="text-gold font-medium text-sm tracking-wider">${artist.genre}</p>
+                            <button class="mt-3 text-xs bg-gold/20 hover:bg-gold text-gold hover:text-black py-2 px-4 rounded-full transition border border-gold/50 animate-pulse">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
+                `;
+                sliderContainer.appendChild(card);
+            });
+        }
+
+        function updateCarousel() {
+            const cards = document.querySelectorAll('.artist-card');
+            
+            cards.forEach((card, index) => {
+                card.classList.remove('card-active', 'card-prev', 'card-next', 'card-hidden');
+
+                let diff = (index - currentIndex + artists.length) % artists.length;
+                if (diff > artists.length / 2) diff -= artists.length;
+
+                if (diff === 0) {
+                    card.classList.add('card-active');
+                } else if (diff === 1) {
+                    card.classList.add('card-next');
+                } else if (diff === -1) {
+                    card.classList.add('card-prev');
+                } else {
+                    card.classList.add('card-hidden');
+                }
+            });
+
+            const activeArtist = artists[currentIndex];
+            artistInfoDisplay.innerHTML = `
+                <div class="animate-fade-in-up">
+                    <h3 class="text-2xl text-gold font-bold mb-2">${activeArtist.name}</h3>
+                    <p class="text-gray-400 text-sm md:text-base">${activeArtist.description}</p>
+                </div>
+            `;
+        }
+
+        document.getElementById('nextBtn').onclick = () => {
+            currentIndex = (currentIndex + 1) % artists.length;
+            updateCarousel();
+            resetAutoPlay();
+        };
+
+        document.getElementById('prevBtn').onclick = () => {
+            currentIndex = (currentIndex - 1 + artists.length) % artists.length;
+            updateCarousel();
+            resetAutoPlay();
+        };
+
+        function startAutoPlay() {
+            autoPlayInterval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % artists.length;
+                updateCarousel();
+            }, 3500); 
+        }
+
+        function resetAutoPlay() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+
+        function openModal(artist) {
+            
+            modalContent.innerHTML = `
+                <div class="flex flex-col md:flex-row bg-gray-900 text-white w-full md:h-[600px]">
+                    
+                    <div class="w-full md:w-[45%] h-64 md:h-full relative shrink-0 overflow-hidden group">
+                        <img src="${artist.image}" class="w-full h-full object-cover object-top shadow-xl transition duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 md:bg-gradient-to-r md:from-transparent md:to-gray-900 opacity-80"></div>
+                        
+                        <div class="absolute bottom-4 left-4 md:hidden z-20">
+                            <h2 class="text-3xl font-bold text-white shadow-black drop-shadow-md">${artist.name}</h2>
+                            <span class="bg-gold text-black text-xs font-bold px-2 py-1 rounded mt-1 inline-block">${artist.genre}</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-[55%] p-6 md:p-8 flex flex-col h-full relative">
+                        
+                        <div class="hidden md:block mb-4 shrink-0" data-aos="fade-left">
+                            <h2 class="text-4xl font-bold text-gold mb-2 tracking-wide">${artist.name}</h2>
+                            <span class="border border-gold text-gold text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${artist.genre}</span>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto pr-3 custom-scrollbar mb-4">
+                            <p class="text-gray-300 leading-relaxed text-lg font-light">
+                                ${artist.description}
+                            </p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mt-6 text-sm text-gray-500 border-t border-gray-800 pt-4">
+                                <div>
+                                    <span class="block text-gold mb-1"><i class="fas fa-map-marker-alt mr-2"></i>Origem</span>
+                                    Minas Gerais, BR
+                                </div>
+                                <div>
+                                    <span class="block text-gold mb-1"><i class="fas fa-music mr-2"></i>Estilo</span>
+                                    ${artist.genre}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="shrink-0 pt-4 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-900 z-10">
+                            <div class="flex gap-4">
+                                <a href="${artist.instagram || '#'}" target="_blank" class="text-gray-400 hover:text-gold transition text-xl transform hover:scale-125 hover:rotate-6"><i class="fab fa-instagram"></i></a>
+                                <a href="${artist.spotify || '#'}" target="_blank" class="text-gray-400 hover:text-green-500 transition text-xl transform hover:scale-125 hover:rotate-6"><i class="fab fa-spotify"></i></a>
+                                <a href="${artist.youtube || '#'}" target="_blank" class="text-gray-400 hover:text-red-600 transition text-xl transform hover:scale-125 hover:rotate-6"><i class="fab fa-youtube"></i></a>
+                            </div>
+                            <a href="#contato" onclick="closeModalFunc()" class="w-full sm:w-auto text-center bg-gold hover:bg-white text-black font-bold py-2 px-6 text-sm rounded-full transition shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-none btn-shine">
+                                CONTRATAR SHOW
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            artistModal.classList.remove('hidden');
+            clearInterval(autoPlayInterval);
+        }
+
+        const closeModalFunc = () => {
+            artistModal.classList.add('hidden');
+            startAutoPlay(); 
+        };
+
+        document.getElementById('closeModalBtn').onclick = closeModalFunc;
+        document.getElementById('closeModalOverlay').onclick = closeModalFunc;
+
+        function setupMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const menu = document.getElementById('mobileMenu');
+            const links = document.querySelectorAll('.mobile-link');
+
+            btn.onclick = () => {
+                menu.classList.toggle('hidden');
+            };
+
+            links.forEach(link => {
+                link.onclick = () => menu.classList.add('hidden');
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
