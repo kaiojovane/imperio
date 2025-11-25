@@ -609,74 +609,63 @@
         }
 
         function openModal(artist) {
-    modalContent.innerHTML = `
-        <div class="flex flex-col md:flex-row w-full h-full bg-gray-900 text-white">
             
-            <div class="relative w-full md:w-[45%] h-48 md:h-full shrink-0 overflow-hidden group">
-                <img src="${artist.image}" class="w-full h-full object-cover object-top shadow-xl transition duration-1000 group-hover:scale-105">
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 md:bg-gradient-to-r md:from-transparent md:to-gray-900 opacity-80"></div>
-                
-                <div class="absolute bottom-3 left-4 md:hidden z-20">
-                    <h2 class="text-2xl font-bold text-white shadow-black drop-shadow-md leading-none">${artist.name}</h2>
-                    <span class="bg-gold text-black text-[10px] font-bold px-2 py-0.5 rounded mt-1 inline-block">${artist.genre}</span>
-                </div>
-            </div>
-
-            <div class="flex flex-col flex-1 min-h-0 relative w-full md:w-[55%] bg-gray-900">
-                
-                <div class="hidden md:block pt-8 px-8 pb-2 shrink-0">
-                    <h2 class="text-4xl font-bold text-gold mb-2 tracking-wide">${artist.name}</h2>
-                    <span class="border border-gold text-gold text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${artist.genre}</span>
-                </div>
-
-                <div class="flex-1 overflow-y-auto px-6 md:px-8 py-4 custom-scrollbar">
-                    <p class="text-gray-300 leading-relaxed text-sm md:text-lg font-light text-justify">
-                        ${artist.description}
-                    </p>
+            modalContent.innerHTML = `
+                <div class="flex flex-col md:flex-row bg-gray-900 text-white w-full h-full">
                     
-                    <div class="grid grid-cols-2 gap-4 mt-6 text-sm text-gray-500 border-t border-gray-800 pt-4 mb-2">
-                        <div>
-                            <span class="block text-gold mb-1 text-xs uppercase"><i class="fas fa-map-marker-alt mr-2"></i>Origem</span>
-                            <span class="text-gray-300">${artist.location || 'Brasil'}</span>
+                    <div class="w-full md:w-[45%] h-48 md:h-full relative shrink-0 overflow-hidden group">
+                        <img src="${artist.image}" class="w-full h-full object-cover object-top shadow-xl transition duration-1000 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 md:bg-gradient-to-r md:from-transparent md:to-gray-900 opacity-80"></div>
+                        
+                        <div class="absolute bottom-4 left-4 md:hidden z-20">
+                            <h2 class="text-2xl font-bold text-white shadow-black drop-shadow-md leading-none">${artist.name}</h2>
+                            <span class="bg-gold text-black text-[10px] font-bold px-2 py-0.5 rounded mt-1 inline-block">${artist.genre}</span>
                         </div>
-                        <div>
-                            <span class="block text-gold mb-1 text-xs uppercase"><i class="fas fa-music mr-2"></i>Estilo</span>
-                            <span class="text-gray-300">${artist.genre}</span>
+                    </div>
+
+                    <div class="w-full md:w-[55%] flex flex-col flex-1 min-h-0 relative bg-gray-900">
+                        
+                        <div class="hidden md:block pt-8 px-8 pb-2 shrink-0">
+                            <h2 class="text-4xl font-bold text-gold mb-2 tracking-wide">${artist.name}</h2>
+                            <span class="border border-gold text-gold text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${artist.genre}</span>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto px-6 md:px-8 py-4 custom-scrollbar">
+                            <p class="text-gray-300 leading-relaxed text-sm md:text-lg font-light text-justify">
+                                ${artist.description}
+                            </p>
+                            
+                            <div class="grid grid-cols-2 gap-4 mt-6 text-sm text-gray-500 border-t border-gray-800 pt-4 mb-2">
+                                <div><span class="block text-gold mb-1 text-xs uppercase">Origem</span> ${artist.location || 'Brasil'}</div>
+                                <div><span class="block text-gold mb-1 text-xs uppercase">Estilo</span> ${artist.genre}</div>
+                            </div>
+                        </div>
+
+                        <div class="shrink-0 p-4 md:p-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-900 z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+                            <div class="flex gap-6 justify-center w-full sm:w-auto order-2 sm:order-1">
+                                <a href="${artist.instagram || '#'}" target="_blank" class="text-gray-500 hover:text-gold transition text-xl"><i class="fab fa-instagram"></i></a>
+                                <a href="${artist.spotify || '#'}" target="_blank" class="text-gray-500 hover:text-green-500 transition text-xl"><i class="fab fa-spotify"></i></a>
+                                <a href="${artist.youtube || '#'}" target="_blank" class="text-gray-500 hover:text-red-600 transition text-xl"><i class="fab fa-youtube"></i></a>
+                            </div>
+
+                            <a href="https://wa.me/5562996118200?text=Olá! Quero falar sobre a organização de um evento." target="_blank" onclick="closeModalFunc()" class="w-full sm:w-auto text-center bg-gold hover:bg-white text-black font-bold py-3 px-6 text-sm rounded-full transition hover:shadow-gold/20 order-1 sm:order-2 uppercase tracking-wide">
+                                Contratar Show
+                            </a>
                         </div>
                     </div>
                 </div>
+            `;
+            
+            document.body.style.overflow = 'hidden';
+            artistModal.classList.remove('hidden');
+            clearInterval(autoPlayInterval);
+        }
 
-                <div class="shrink-0 p-4 md:p-8 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-900 z-10 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
-                    
-                    <div class="flex gap-6 justify-center w-full sm:w-auto order-2 sm:order-1">
-                        <a href="${artist.instagram || '#'}" target="_blank" class="text-gray-500 hover:text-gold transition text-xl"><i class="fab fa-instagram"></i></a>
-                        <a href="${artist.spotify || '#'}" target="_blank" class="text-gray-500 hover:text-green-500 transition text-xl"><i class="fab fa-spotify"></i></a>
-                        <a href="${artist.youtube || '#'}" target="_blank" class="text-gray-500 hover:text-red-600 transition text-xl"><i class="fab fa-youtube"></i></a>
-                    </div>
-
-                    <a href="https://wa.me/5562996118200?text=Olá! Quero falar sobre a organização de um evento." 
-                       target="_blank" 
-                       onclick="closeModalFunc()" 
-                       class="w-full sm:w-auto text-center bg-gold hover:bg-white text-black font-bold py-3 px-6 text-sm rounded-full transition shadow-lg hover:shadow-gold/20 order-1 sm:order-2 uppercase tracking-wide">
-                        Contratar Show
-                    </a>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    artistModal.classList.remove('hidden');
-    // Trava o scroll da página de fundo quando o modal abre
-    document.body.style.overflow = 'hidden'; 
-    clearInterval(autoPlayInterval);
-}
-
-// ATENÇÃO: Atualize sua função de fechar também para destravar o scroll do fundo
-const closeModalFunc = () => {
-    artistModal.classList.add('hidden');
-    document.body.style.overflow = ''; // Destrava o scroll do fundo
-    startAutoPlay(); 
-};
+        const closeModalFunc = () => {
+            document.body.style.overflow = '';
+            artistModal.classList.add('hidden');
+            startAutoPlay(); 
+        };
 
         document.getElementById('closeModalBtn').onclick = closeModalFunc;
         document.getElementById('closeModalOverlay').onclick = closeModalFunc;
